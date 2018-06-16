@@ -1,11 +1,11 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}aaaaa</h1>
+    <h1>{{ msg }}aaaaa 태경이 수정</h1>
     <h2>Essential Links</h2>
     <ul>
       <li>
         <a
-          href="https://vuejs.org"
+          href="https://vuejs.org",
           target="_blank"
         >
           Core Docs
