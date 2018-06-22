@@ -7,9 +7,12 @@
       <input type="button" value="검색" @click="reSearch" />
     </span>
     <div>
+      <img :src="tierImg" />
+    </div>
+    <div>
       <div>소환사명 : <label>{{userName}}</label></div>
-      <div>티어 : <label>{{tier}} {{rank}}</label></div>
       <div>소환사 레벨 : <label>{{level}}</label></div>
+      <div>티어 : <label>{{tier}} {{rank}}</label></div>
       <div>리그명 : <label>{{leagueName}}</label></div>
       <div>승리횟수 : <label>{{wins}}</label></div>
       <div>패배횟수 : <label>{{losses}}</label></div>
@@ -33,6 +36,7 @@ export default {
       wins: null,
       losses: null,
       revisionDate: null,
+      tierImg: null,
       url: '/apiCall'
     }
   },
@@ -43,21 +47,29 @@ export default {
       axios.get(`${this.url}?userName=${userNm}`)
         .then(function (response) {
           let dataObj = response.data
-          if (dataObj.statusCode !== 404) {
-            let leagueObj = dataObj.LeagueList
+          if (dataObj.statusCode == 404) return false
+          let date = new Date(dataObj.revisionDate)
+          self.revisionDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+          self.level = dataObj.summonerLevel
+          debugger;
+          let leagueObj = dataObj.LeagueList
+          if(Object.keys(leagueObj).length > 0){
             let soloLeague = leagueObj.SOLO
-            self.level = dataObj.summonerLevel
             self.leagueName = soloLeague.leagueName
             self.rank = soloLeague.rank
             self.tier = soloLeague.tier
             self.wins = soloLeague.wins
-            self.losses = soloLeague.losses
-            self.name = dataObj.name
-            let date = new Date(dataObj.revisionDate)
-            self.revisionDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-          } else {
-            return false
+          }else{
+            self.leagueName = null
+            self.losses = null
+            self.wins = null
+            self.losses = null
+            self.tier = 'unranked'
           }
+
+          // TIER IMG
+          self.tierImg = require('../assets/' + self.tier.toLowerCase() + ".png")
+
         })
         .catch(function (error) {
           console.log(error)

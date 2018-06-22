@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-/* import HelloWorld from '@/components/HelloWorld' */
 import LoLRecord from '@/components/LoLRecord'
 
 Vue.use(Router)
