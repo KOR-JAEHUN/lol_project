@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
-import LoLRecord from '@/components/LoLRecord'
+import LoLHome from '@/components/LoLHome'
+import LoLMain from '@/components/LoLMain'
 
 Vue.use(Router)
 
@@ -10,13 +10,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: Home
+      name: 'LoLHome',
+      component: LoLHome
     },
     {
       path: '/record',
-      name: 'lolRecord',
-      component: LoLRecord
+      name: 'LoLMain',
+      component: LoLMain
     }
   ]
 })

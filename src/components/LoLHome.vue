@@ -2,8 +2,8 @@
     <div id="home_div">
       <img src="../assets/lol_logo.jpg">
       <div>
-        <input type="text" size="50" v-model="userName" />
-        <button v-on:click="search()" >검색</button>
+        <input type="text" size="50" v-model="userName" @keyup.enter="search" />
+        <button v-on:click="search"  >검색</button>
       </div>
     </div>
 </template>

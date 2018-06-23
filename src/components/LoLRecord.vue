@@ -1,11 +1,5 @@
 <template>
   <div id="record_div">
-    <span>
-      <input type="text" size="50" id="userNmInput" :value="userName"/>
-    </span>
-    <span>
-      <input type="button" value="검색" @click="reSearch" />
-    </span>
     <div>
       <img :src="tierImg" />
     </div>
@@ -26,6 +20,7 @@
 import axios from 'axios'
 export default {
   name: 'LoLRecord',
+  props : ['searchUserName'],
   data () {
     return {
       userName: null,
@@ -42,16 +37,17 @@ export default {
   },
   methods: {
     apiCall: function () {
-      let userNm = $('#userNmInput').val()
+      let userNm = this.searchUserName
       let self = this // data객체의 this
+
       axios.get(`${this.url}?userName=${userNm}`)
         .then(function (response) {
           let dataObj = response.data
           if (dataObj.statusCode == 404) return false
           let date = new Date(dataObj.revisionDate)
+          self.userName = dataObj.name
           self.revisionDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
           self.level = dataObj.summonerLevel
-          debugger;
           let leagueObj = dataObj.LeagueList
           if(Object.keys(leagueObj).length > 0){
             let soloLeague = leagueObj.SOLO
@@ -59,9 +55,10 @@ export default {
             self.rank = soloLeague.rank
             self.tier = soloLeague.tier
             self.wins = soloLeague.wins
+            self.losses = soloLeague.losses
           }else{
             self.leagueName = null
-            self.losses = null
+            self.rank = null
             self.wins = null
             self.losses = null
             self.tier = 'unranked'
@@ -74,19 +71,17 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
-    },
-    reSearch: function () {
-      const param = 'userName=' + $('#userNmInput').val()
-      location.href = '/#/record?' + param
-      this.userName = this.$route.query.userName
-      this.apiCall()
     }
   },
-  created () {
-    this.userName = this.$route.query.userName
-  },
-  mounted () {
+  created () { // 최초 실행시
     this.apiCall()
+  },
+  watch: {
+    // 부모로부터 받아온 props에 변경이 이루어질경우
+    // 변경이 이루어진 변수에 이벤트를 준다.
+    searchUserName : function (val){
+      this.apiCall()
+    }
   }
 }
 
